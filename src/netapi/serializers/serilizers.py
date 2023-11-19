@@ -21,6 +21,8 @@ class CreateSerializer(serializers.ModelSerializer):
         model=ServerInfo
         read_only_fields=(
             'task',
+            'expire_time',
+            'is_active'
         )
         fields='__all__'
 

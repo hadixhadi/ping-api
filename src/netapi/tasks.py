@@ -31,4 +31,6 @@ def send_email(email_list,message,subject):
 
 
 
-
+@shared_task(bind=True)
+def run_is_active_function():
+    ServerInfo.is_active()

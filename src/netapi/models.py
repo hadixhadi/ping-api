@@ -1,6 +1,10 @@
+import datetime
+from django.utils import timezone
+from datetime import timedelta
 from django.db import models
 from django.contrib.auth import get_user_model
 from django_celery_beat.models import PeriodicTask
+import time
 # Create your models here.
 
 class Plans(models.Model):
@@ -23,12 +27,16 @@ class ServerInfo(models.Model):
     plan_type=models.ForeignKey(Plans,null=True,on_delete=models.SET_NULL)
     task=models.ForeignKey(PeriodicTask,null=True,blank=True,on_delete=models.SET_NULL)
     created_at=models.DateTimeField(auto_now_add=True)
+    expire_time=models.DateTimeField(blank=True,null=True)
+    is_active=models.BooleanField(default=False,null=True)
+    def set_expire_time(self):
+        self.expire_time=timezone.now() + timedelta(days=30)
+        self.save()
+    @classmethod
+    def is_expired(self):
+        if self.expire_time < timezone.now():
+            self.is_active=False
     def __str__(self):
         return f"{self.user}-{self.server_ip}-{self.email}"
 
 
-class MonitorRequest(models.Model):
-    response_time = models.IntegerField(blank=False)
-    response_status = models.IntegerField(blank=False)
-    monitor = models.ForeignKey(ServerInfo, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)

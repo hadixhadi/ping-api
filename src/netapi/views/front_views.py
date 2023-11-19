@@ -41,9 +41,12 @@ class ServerViewSet(viewsets.ModelViewSet):
                             interval=schedule,
                             kwargs=json.dumps({
                                 "ServerInfoId":instance.id
-                            })
+                            }),
+                            expires=timezone.now() + timedelta(days=30)
                         )
                     instance.task=task
+                    instance.set_expire_time()
+                    instance.is_active=True
                     instance.save()
                 # send_ping(serializer.validated_data)
         except Exception as e:
