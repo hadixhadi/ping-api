@@ -9,3 +9,4 @@ class ServerInfoAdmin(admin.ModelAdmin):
         ,'created_at','expire_time','is_active']
 
 admin.site.register(Plans)
+admin.site.register(MonitorServer)

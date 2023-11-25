@@ -26,4 +26,7 @@ urlpatterns = [
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/v1/',include('netapi.urls.front_urls')),
     path("api/schema/swagger-ui/", SpectacularSwaggerView.as_view(
-        url_name="schema"), name="swagger-ui"),]
+        url_name="schema"), name="swagger-ui"),
+    # path("api/v1/account/", include("dj_rest_auth.urls")),
+
+]

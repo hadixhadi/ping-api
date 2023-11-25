@@ -1,25 +1,21 @@
 import json
-
 from django.shortcuts import render , HttpResponse , get_object_or_404
 from rest_framework import viewsets
 from netapi.models import *
 from netapi.serializers.serilizers import *
-from rest_framework.permissions import IsAuthenticated,IsAdminUser
-from netapi.utils.utils import send_ping
+from rest_framework.permissions import IsAuthenticated,IsAdminUser,AllowAny
 from django.db import transaction
 from rest_framework.exceptions import APIException
 from django_celery_beat.models import IntervalSchedule, PeriodicTask
 # Create your views here.
 class ServerViewSet(viewsets.ModelViewSet):
-
-    def get_permissions(self):
-        if self.action=="list":
-            permission_classes=[IsAdminUser]
-        else:
-            permission_classes=[IsAuthenticated]
-        return [permission() for permission in permission_classes]
+    permission_classes = [AllowAny]
+    # def get_permissions(self):
+    #     permission_classes=[AllowAny]
+    #     return [permission() for permission in permission_classes]
     def get_queryset(self):
-        return ServerInfo.objects.filter(user=self.request.user)
+        # return ServerInfo.objects.filter(user=self.request.user)
+        return ServerInfo.objects.all()
     def perform_create(self, serializer):
         try:
             print("perform create method")
@@ -42,7 +38,7 @@ class ServerViewSet(viewsets.ModelViewSet):
                             kwargs=json.dumps({
                                 "ServerInfoId":instance.id
                             }),
-                            expires=timezone.now() + timedelta(days=30)
+                            expires=timezone.now() + timedelta(days=5)
                         )
                     instance.task=task
                     instance.set_expire_time()
@@ -51,18 +47,13 @@ class ServerViewSet(viewsets.ModelViewSet):
                 # send_ping(serializer.validated_data)
         except Exception as e:
             raise APIException(str(e))
-
-
     def destroy(self, request, *args, **kwargs):
         instance=self.get_object()
         print(instance)
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
     def perform_destroy(self, instance):
         instance.delete()
-
     def get_serializer_class(self):
         match self.action:
             case "list":
@@ -77,3 +68,15 @@ class ServerViewSet(viewsets.ModelViewSet):
                 return ListSerializer
 
 
+class MonitorServerViewset(viewsets.ModelViewSet):
+    def get_permissions(self):
+        permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+    def get_queryset(self):
+        return MonitorServer.objects.filter(user=self.request.user)
+    def get_serializer_class(self):
+        match self.action:
+            case "list":
+                return MonitorServerSerializer
+            case _:
+                return MonitorServerSerializer

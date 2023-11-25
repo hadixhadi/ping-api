@@ -1,7 +1,6 @@
 from django.http import JsonResponse
 from rest_framework import serializers, status
 from ..models import *
-from ..utils.utils import send_ping
 from ping3 import ping
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
@@ -35,4 +34,9 @@ class DeleteTaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model=ServerInfo
+        fields='__all__'
+
+class MonitorServerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=MonitorServer
         fields='__all__'

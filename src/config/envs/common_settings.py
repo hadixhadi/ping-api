@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-^7e)$k4*ns%9pf8mq6sd@ui*h8$0%o06oni!!@$fm+m_xq==v7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.100.15','127.0.0.1','0.0.0.0']
 
 
 # Application definition
@@ -41,16 +41,22 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_celery_beat',
     'drf_spectacular',
+    "rest_framework.authtoken",
+    # "dj_rest_auth",
+    "corsheaders",
+
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -66,10 +72,14 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                "django.template.context_processors.request",
             ],
         },
     },
 ]
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+SITE_ID = 1
+
 
 WSGI_APPLICATION = 'config.wsgi.application'
 

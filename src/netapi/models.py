@@ -29,8 +29,8 @@ class ServerInfo(models.Model):
     created_at=models.DateTimeField(auto_now_add=True)
     expire_time=models.DateTimeField(blank=True,null=True)
     is_active=models.BooleanField(default=False,null=True)
-    def set_expire_time(self):
-        self.expire_time=timezone.now() + timedelta(days=30)
+    def set_expire_time(self):#set expire time in database
+        self.expire_time=timezone.now() + timedelta(days=5)
         self.save()
     @classmethod
     def is_expired(self):
@@ -40,3 +40,11 @@ class ServerInfo(models.Model):
         return f"{self.user}-{self.server_ip}-{self.email}"
 
 
+class MonitorServer(models.Model):
+    user=models.ForeignKey(get_user_model(),on_delete=models.CASCADE)
+    response=models.FloatField()
+    server=models.ForeignKey(ServerInfo,on_delete=models.CASCADE,related_name="servers")
+    created_at=models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.response} : {self.server}"
