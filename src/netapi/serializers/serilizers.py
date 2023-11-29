@@ -10,6 +10,8 @@ class ListSerializer(serializers.ModelSerializer):
         model=ServerInfo
         fields='__all__'
 
+
+
 class CreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
@@ -37,6 +39,13 @@ class DeleteTaskSerializer(serializers.ModelSerializer):
         fields='__all__'
 
 class MonitorServerSerializer(serializers.ModelSerializer):
+    server=serializers.SerializerMethodField()
+    server_user=serializers.SerializerMethodField()
     class Meta:
         model=MonitorServer
-        fields='__all__'
+        fields=['response','server','server_user']
+
+    def get_server(self,obj):
+        return obj.server.server_ip
+    def get_server_user(self,obj):
+        return obj.server.user.email

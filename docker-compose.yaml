@@ -1,9 +1,37 @@
 services:
-  web:
+  app:
     build: .
-    command: python /src/manage.py runserver 0.0.0.0:8000
+    command: python src/manage.py runserver 0.0.0.0:8000
     restart: always
     volumes:
-        - .:/code
+      - .:/src
     ports:
-        - "8000:8000"
+      - "8000:8000"
+    depends_on:
+      - rabbitmq
+      - postgres
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - "RABBITMQ_DEFAULT_USER=guest"
+      - "RABBITMQ_DEFAULT_PASS=guest"
+  flower:
+    image: mher/flower
+    ports:
+      - "5555:5555"
+    environment:
+      - "CELERY_BROKER_URL=amqp://rabbitmq"
+  postgres:
+    image: postgres:latest
+    environment:
+      - "POSTGRES_USER=dbuser"
+      - "POSTGRES_PASSWORD=1q2w3e4r5t"
+      - "POSTGRES_DB=logvip"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"

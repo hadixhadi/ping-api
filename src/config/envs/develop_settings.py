@@ -12,8 +12,8 @@ EMAIL_HOST_PASSWORD = 'tozyrzptsuttyydj'
 REST_FRAMEWORK = {
     # YOUR SETTINGS
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.AllowAny",
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
 ],
 }
 #DRF sepctacular settings
@@ -30,26 +30,27 @@ CSRF_TRUSTED_ORIGINS = ["http://192.168.100.31:3000","https://192.168.100.31:300
                         "http://192.168.100.30"
                         ]
 
-
-CORS_ALLOWED_ORIGINS = [
-    "http://192.168.100.31",
-    "http://192.168.100.30"
-
-]
-
-CORS_ALLOW_HEADERS = (
-    "accept",
-    "authorization",
-    "content-type",
-    "user-agent",
-    "x-csrftoken",
-    "x-requested-with",
-)
-CORS_ALLOW_METHODS = (
-    "DELETE",
-    "GET",
-    "OPTIONS",
-    "PATCH",
-    "POST",
-    "PUT",
-)
+#CORS
+CORS_ALLOW_ALL_ORIGINS=True
+# CORS_ALLOWED_ORIGINS = [
+#     "http://192.168.100.31",
+#     "http://192.168.100.30"
+#
+# ]
+#
+# CORS_ALLOW_HEADERS = (
+#     "accept",
+#     "authorization",
+#     "content-type",
+#     "user-agent",
+#     "x-csrftoken",
+#     "x-requested-with",
+# )
+# CORS_ALLOW_METHODS = (
+#     "DELETE",
+#     "GET",
+#     "OPTIONS",
+#     "PATCH",
+#     "POST",
+#     "PUT",
+# )

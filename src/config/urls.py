@@ -21,6 +21,7 @@ SpectacularAPIView,
 
 SpectacularSwaggerView, # new
 )
+from rest_framework.authtoken import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
@@ -28,5 +29,5 @@ urlpatterns = [
     path("api/schema/swagger-ui/", SpectacularSwaggerView.as_view(
         url_name="schema"), name="swagger-ui"),
     # path("api/v1/account/", include("dj_rest_auth.urls")),
-
+    path('create-token/', views.obtain_auth_token)
 ]

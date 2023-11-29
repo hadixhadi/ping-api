@@ -6,5 +6,5 @@ app = Celery('config')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 CELERY_TIMEZONE = "Asia/Tehran"
-BROKER_URL = "amqp://guest:guest@localhost:5672//"
+app.conf.broker_url = 'amqp://rabbitmq'
 CELERY_RESULT_BACKEND = 'django-db'

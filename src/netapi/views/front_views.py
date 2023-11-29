@@ -9,13 +9,12 @@ from rest_framework.exceptions import APIException
 from django_celery_beat.models import IntervalSchedule, PeriodicTask
 # Create your views here.
 class ServerViewSet(viewsets.ModelViewSet):
-    permission_classes = [AllowAny]
-    # def get_permissions(self):
-    #     permission_classes=[AllowAny]
-    #     return [permission() for permission in permission_classes]
+
+    def get_permissions(self):
+        permission_classes=[IsAuthenticated]
+        return [permission() for permission in permission_classes]
     def get_queryset(self):
-        # return ServerInfo.objects.filter(user=self.request.user)
-        return ServerInfo.objects.all()
+        return ServerInfo.objects.filter(user=self.request.user)
     def perform_create(self, serializer):
         try:
             print("perform create method")
@@ -44,7 +43,7 @@ class ServerViewSet(viewsets.ModelViewSet):
                     instance.set_expire_time()
                     instance.is_active=True
                     instance.save()
-                # send_ping(serializer.validated_data)
+                    return Response(status=status.HTTP_201_CREATED)
         except Exception as e:
             raise APIException(str(e))
     def destroy(self, request, *args, **kwargs):
@@ -74,6 +73,7 @@ class MonitorServerViewset(viewsets.ModelViewSet):
         return [permission() for permission in permission_classes]
     def get_queryset(self):
         return MonitorServer.objects.filter(user=self.request.user)
+
     def get_serializer_class(self):
         match self.action:
             case "list":
