@@ -36,6 +36,7 @@ class ServerInfo(models.Model):
     def is_expired(self):
         if self.expire_time < timezone.now():
             self.is_active=False
+            return True
     def __str__(self):
         return f"{self.user}-{self.server_ip}-{self.email}"
 

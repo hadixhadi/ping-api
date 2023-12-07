@@ -10,6 +10,12 @@ services:
     depends_on:
       - rabbitmq
       - postgres
+  worker:
+    build: .
+    command: celery -A config worker --loglevel=info
+  beat:
+      build: .
+      command: celery -A config beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
 
   rabbitmq:
     image: rabbitmq:management
