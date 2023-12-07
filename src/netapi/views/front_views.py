@@ -11,7 +11,7 @@ from django_celery_beat.models import IntervalSchedule, PeriodicTask
 class ServerViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
-        permission_classes=[IsAuthenticated]
+        permission_classes=[AllowAny]
         return [permission() for permission in permission_classes]
     def get_queryset(self):
         return ServerInfo.objects.filter(user=self.request.user)

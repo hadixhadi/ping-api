@@ -24,7 +24,7 @@ def task_monitor(self,ServerInfoId):
             response=ping_status,
             server=instance
         )
-    return "success"
+    return "server is on"
 
 @shared_task
 def send_email(email_list,message,subject):
@@ -40,4 +40,4 @@ def send_email(email_list,message,subject):
 
 @shared_task(bind=True)
 def run_is_active_function():
-    ServerInfo.is_active()
+    ServerInfo.is_expired()
